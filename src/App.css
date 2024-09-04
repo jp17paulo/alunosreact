@@ -1,0 +1,44 @@
+/* Estilos gerais para o contêiner */
+.aluno-container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 5px;
+  margin: 30px auto; /* Centraliza o contêiner horizontalmente */
+}
+
+/* Estilos para o cabeçalho dentro do contêiner */
+.aluno-container header {
+  display: flex; /* Usa flexbox para alinhar os itens */
+  align-items: center; /* Alinha os itens verticalmente no centro */
+}
+
+/* Estilos para a imagem dentro do cabeçalho */
+.aluno-container header img {
+  height: 50px; /* Define a altura da imagem */
+}
+
+/* Estilos para o botão dentro do cabeçalho */
+.aluno-container header button {
+  height: 50px;
+  width: 200px;
+  border-radius: 5px; /* Bordas arredondadas */
+  border: 1px solid #DCDCDC; /* Borda cinza clara */
+  background: green; /* Fundo verde */
+  margin-left: 16px; /* Espaço à esquerda da imagem */
+  transition: border-color 0.5s; /* Transição suave da cor da borda */
+}
+
+/* Efeito hover para o botão */
+.aluno-container header button:hover {
+  border-color: #5180ac; /* Muda a cor da borda para azul ao passar o mouse */
+}
+
+/* Estilos para a tabela e suas células */
+table, th, td {
+  border: 1px solid black; /* Borda preta para tabela e células */
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 20px; /* Espaçamento interno nas células */
+  text-align: left; /* Alinhamento do texto à esquerda */
+}
