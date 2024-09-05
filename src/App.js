@@ -8,9 +8,11 @@ import logoCadastro from "./assets/cadastro.png";
 function App({ baseUrl = "https://localhost:44340/api/alunos" }) {
   // BaseUrl com valor padrão
   const [data, setData] = useState([]);
+  const [updateData, setUpdateData] = useState(true);
   const [loading, setLoading] = useState(true);
   const [modalIncluir, setModalIncluir] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
+  const [modalExcluir, setModalExcluir] = useState(false);
   const [error, setError] = useState(null);
 
   const [alunoSelecionado, setAlunoSelecionado] = useState({
@@ -24,9 +26,7 @@ function App({ baseUrl = "https://localhost:44340/api/alunos" }) {
     setAlunoSelecionado(aluno);
 
     // Se a opção for "Editar", abre ou fecha o modal de edição
-    if (opcao === "Editar") {
-      abrirFecharModalEditar();
-    }
+    opcao === "Editar" ? abrirFecharModalEditar() : abrirFecharModalExcluir();
   };
 
   const abrirFecharModalIncluir = () => {
@@ -35,6 +35,10 @@ function App({ baseUrl = "https://localhost:44340/api/alunos" }) {
 
   const abrirFecharModalEditar = () => {
     setModalEditar(!modalEditar);
+  };
+
+  const abrirFecharModalExcluir = () => {
+    setModalExcluir(!modalExcluir);
   };
 
   const handleChange = (e) => {
@@ -65,6 +69,7 @@ function App({ baseUrl = "https://localhost:44340/api/alunos" }) {
     try {
       const response = await axios.post(baseUrl, alunoSelecionado);
       setData(data.concat(response.data));
+      setUpdateData(true);
       abrirFecharModalIncluir();
     } catch (error) {
       console.log(error);
@@ -87,6 +92,7 @@ function App({ baseUrl = "https://localhost:44340/api/alunos" }) {
             aluno.idade = resposta.idade;
           }
         });
+        setUpdateData(true);
         abrirFecharModalEditar();
       })
       .catch((error) => {
@@ -94,9 +100,27 @@ function App({ baseUrl = "https://localhost:44340/api/alunos" }) {
       });
   };
 
+  const pedidoDelete = async () => {
+    try {
+      const response = await axios.delete(baseUrl + "/" + alunoSelecionado.id);
+
+      // Atualiza a lista de alunos, removendo o aluno excluído
+      setData(data.filter((aluno) => aluno.id !== alunoSelecionado.id));
+      setUpdateData(true);
+
+      // Fecha o modal de exclusão
+      abrirFecharModalExcluir();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    pedidoGet();
-  }, [baseUrl]); // baseUrl incluído na dependência
+    if (updateData) {
+      pedidoGet(); // Função para buscar os dados
+      setUpdateData(false); // Evita loop, reseta o estado
+    }
+  }, [updateData]);
 
   if (loading) return <div>Carregando...</div>;
   if (error) return <div>{error}</div>;
@@ -241,6 +265,27 @@ function App({ baseUrl = "https://localhost:44340/api/alunos" }) {
             onClick={() => abrirFecharModalEditar()}
           >
             Cancelar
+          </button>
+        </ModalFooter>
+      </Modal>
+      <Modal isOpen={modalExcluir}>
+        <ModalBody>
+          Confirma a exclusão deste(a) aluno(a):{" "}
+          {alunoSelecionado && alunoSelecionado.nome}?
+        </ModalBody>
+
+        <ModalFooter>
+          <button
+            className="btn btn-danger"
+            onClick={() => pedidoDelete()} // Função que lida com a exclusão do aluno
+          >
+            Sim
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => abrirFecharModalExcluir()} // Função que lida com o cancelamento da exclusão
+          >
+            Não
           </button>
         </ModalFooter>
       </Modal>
