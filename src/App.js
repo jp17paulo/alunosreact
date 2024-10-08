@@ -85,6 +85,7 @@ function App({ baseUrl = "https://localhost:44340/api/alunos" }) {
         var resposta = response.data;
         var dadosAuxiliar = data;
         console.log(data);
+        // eslint-disable-next-line array-callback-return
         dadosAuxiliar.map((aluno) => {
           if (aluno.id === alunoSelecionado.id) {
             aluno.nome = resposta.nome;
@@ -102,7 +103,7 @@ function App({ baseUrl = "https://localhost:44340/api/alunos" }) {
 
   const pedidoDelete = async () => {
     try {
-      const response = await axios.delete(baseUrl + "/" + alunoSelecionado.id);
+      // const response = await axios.delete(baseUrl + "/" + alunoSelecionado.id);
 
       // Atualiza a lista de alunos, removendo o aluno excluído
       setData(data.filter((aluno) => aluno.id !== alunoSelecionado.id));
@@ -120,6 +121,7 @@ function App({ baseUrl = "https://localhost:44340/api/alunos" }) {
       pedidoGet(); // Função para buscar os dados
       setUpdateData(false); // Evita loop, reseta o estado
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateData]);
 
   if (loading) return <div>Carregando...</div>;
